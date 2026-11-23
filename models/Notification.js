@@ -16,11 +16,15 @@ const NotificationSchema = new mongoose.Schema(
     stage: { type: String, enum: WORKFLOW_STAGES, required: true, index: true },
     channel: { type: String, default: 'WhatsApp (Mock)' },
     message: { type: String, required: true },
+    
     deliveryStatus: {
       type: String,
       enum: ['DELIVERED', 'FAILED'],
       default: 'DELIVERED',
     },
+    providerMessageId: { type: String, default: null },
+    errorMessage: { type: String, default: '' },
+    
     sentAt: { type: Date, default: Date.now, index: true },
   },
   { timestamps: true }
@@ -28,3 +32,5 @@ const NotificationSchema = new mongoose.Schema(
 
 export default mongoose.models.Notification ||
   mongoose.model('Notification', NotificationSchema);
+
+  

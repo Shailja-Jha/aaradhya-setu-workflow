@@ -25,7 +25,9 @@ export default function WhatsAppThread({ notifications, devoteeName, phone }) {
           </div>
           <div>
             <p className="text-sm font-semibold leading-tight">{devoteeName}</p>
-            <p className="text-[11px] text-emerald-100">{phone} · Mock WhatsApp API</p>
+            <p className="text-[11px] text-emerald-100">
+  {phone} · {ordered[ordered.length - 1]?.channel || 'WhatsApp'}
+</p>
           </div>
         </div>
         <span className="text-[11px] bg-white/15 px-2 py-0.5 rounded-full">

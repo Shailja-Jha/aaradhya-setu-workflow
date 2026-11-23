@@ -1,3 +1,4 @@
+import { sendWhatsAppMessage } from '@/lib/whatsapp';
 import { NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import Booking from '@/models/Booking';
@@ -111,18 +112,25 @@ export async function POST(request) {
       panditName: booking.panditName,
     });
 
-    const notification = await Notification.create({
-      bookingRef: booking._id,
-      bookingId: booking.bookingId,
-      devoteeName: booking.devoteeName,
-      recipientPhone: booking.phone,
-      pujaName: booking.pujaName,
-      stage: initialStage,
-      channel: 'WhatsApp (Mock)',
-      message,
-      deliveryStatus: 'DELIVERED',
-      sentAt: now,
-    });
+    const delivery = await sendWhatsAppMessage({
+  to: booking.phone,
+  body: message,
+});
+
+const notification = await Notification.create({
+  bookingRef: booking._id,
+  bookingId: booking.bookingId,
+  devoteeName: booking.devoteeName,
+  recipientPhone: booking.phone,
+  pujaName: booking.pujaName,
+  stage: initialStage,
+  channel: delivery.channel,
+  message,
+  deliveryStatus: delivery.deliveryStatus,
+  providerMessageId: delivery.providerMessageId,
+  errorMessage: delivery.errorMessage,
+  sentAt: now,
+});
 
     return NextResponse.json({ booking, notification }, { status: 201 });
   } catch (error) {
